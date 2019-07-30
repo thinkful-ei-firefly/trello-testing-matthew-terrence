@@ -1,20 +1,24 @@
-// make React available
-import React from 'react';
-
-//make the ReactDOM available, necessary for rendering the component
-import ReactDOM from 'react-dom';
-
-//make the App component available
-import List from './List';
+import React from "react";
+import ReactDOM from "react-dom";
+import List from "./List";
+import renderer from "react-test-renderer";
 
 //this is the test case
-it('renders without crashing', () => {
-  // first create a DOM element to render the component into
-  const div = document.createElement('div');
-  const cards= [];
-  //render the component, this is the actual test, if something is wrong it will fail here
-  ReactDOM.render(<List cards={cards} />, div);
+it("renders without crashing", () => {
+  const div = document.createElement("div");
+  const cards = [];
+  const header = "First list";
 
-  //clean up code
+  ReactDOM.render(<List cards={cards} />, div);
   ReactDOM.unmountComponentAtNode(div);
+});
+
+it("renders the UI as expected", () => {
+  const cards = [
+    { id: "l", title: "Twelfth card", content: "lorem ipsum" },
+    { id: "m", title: "Thirteenth card", content: "lorem ipsum" }
+  ];
+  const header = "First list";
+  const tree = renderer.create(<List cards={cards} header={header} />).toJSON();
+  expect(tree).toMatchSnapshot();
 });
